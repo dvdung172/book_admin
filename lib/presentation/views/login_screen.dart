@@ -1,4 +1,5 @@
 import 'package:client/core/constants.dart';
+import 'package:client/core/responsive.dart';
 import 'package:client/core/routes.dart';
 import 'package:client/core/theme.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -56,16 +57,24 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 _buildHeader(isKeyboardOpen),
-                _buildEmailField(context),
+                SizedBox(
+                  width: Responsive.isDesktop(context) ? 500:   double.infinity,
+                  height: 36,
+                  child: _buildEmailField(context),
+                ),
                 const Padding(
                   padding: EdgeInsets.only(top: 12),
                 ),
-                _buildPasswordField(context),
+                SizedBox(
+                  width: Responsive.isDesktop(context) ? 500:   double.infinity,
+                  height: 36,
+                  child: _buildPasswordField(context),
+                ),
                 const Padding(
                   padding: EdgeInsets.only(top: 14),
                 ),
                 SizedBox(
-                  width: double.infinity,
+                  width: Responsive.isDesktop(context) ? 500:   double.infinity,
                   height: 36,
                   child: _buildLoginButton(),
                 ),

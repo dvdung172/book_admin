@@ -44,20 +44,7 @@ dependencies:
   provider: ^6.0.2
   flutter_rating_bar: ^4.0.0
   get_it: ^7.2.0
-  syncfusion_localizations: ^20.3.47
-  syncfusion_flutter_datagrid_export: ^20.3.47-beta
-  syncfusion_flutter_calendar: ^20.3.47
-  syncfusion_flutter_datepicker: ^20.3.47
-  syncfusion_flutter_charts: ^20.3.47
-  syncfusion_flutter_gauges: ^20.3.47
-  syncfusion_flutter_sliders: ^20.3.47
-  syncfusion_flutter_pdf: ^20.3.47
-  syncfusion_flutter_barcodes: ^20.3.47
-  syncfusion_officechart: ^20.3.47-beta
-  syncfusion_flutter_maps: ^20.3.47
-  syncfusion_flutter_signaturepad: ^20.3.47
-  syncfusion_flutter_pdfviewer: ^20.3.47-beta
-  syncfusion_flutter_treemap: ^20.3.47-beta
+
 
 dev_dependencies:
   flutter_test:

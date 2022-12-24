@@ -22,8 +22,8 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key) {
     _tabList = <Widget>[
       const DashBoard(key: ValueKey(0)),
-      const Categories(key: ValueKey(1)),
-      const Products(key: ValueKey(2)),
+      const Categories(key: ValueKey(2)),
+      const Products(key: ValueKey(1)),
     ];
   }
 

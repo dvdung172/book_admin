@@ -54,7 +54,6 @@ class SideMenu extends StatelessWidget {
                   onPressed: () {
                     provider.currentIndex = 1;
                     Navigator.pop(context);
-                    print(provider.currentIndex);
                   }),
               IconButton(
                   iconSize: 20,
