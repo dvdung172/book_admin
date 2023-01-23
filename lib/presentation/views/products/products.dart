@@ -1,6 +1,7 @@
 import 'package:client/core/responsive.dart';
 import 'package:client/core/theme.dart';
 import 'package:client/presentation/views/products/product_table.dart';
+import 'package:client/presentation/views/products/products_add_form.dart';
 import 'package:flutter/material.dart';
 
 class Products extends StatefulWidget {
@@ -38,16 +39,16 @@ class _ProductsState extends State<Products> {
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(vertical: 0),
                             prefixIcon: Icon(Icons.search),
-                            border: OutlineInputBorder(
-                            ),
-                            hintText: 'Search Tech Talk',
+                            border: OutlineInputBorder(),
+                            hintText: 'Search...',
                           ),
                         ),
                       ),
                       ElevatedButton(
                         child: Text('Add'),
                         onPressed: () {
-                          print('Hello');
+                          Navigator.push(context,MaterialPageRoute(builder: (context) => const AddProduct()),
+                          );
                         },
                       ),
                     ],

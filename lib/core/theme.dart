@@ -39,7 +39,8 @@ class CustomTheme {
         fontWeight: FontWeight.bold,
         color: CustomColor.fontBlack,
       ),
-      headline3: TextStyle(fontSize: 16.0, color: CustomColor.fontBlack),
+      headline3: TextStyle(fontSize: 16.0, color: CustomColor.fontBlack,
+        fontWeight: FontWeight.bold,),
       headline4: TextStyle(fontSize: 16.0, color: CustomColor.hintColor),
       button: TextStyle(
         color: CustomColor.white,
