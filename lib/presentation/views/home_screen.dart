@@ -1,4 +1,3 @@
-import 'package:client/core/di.dart';
 import 'package:client/core/theme.dart';
 import 'package:client/presentation/providers/side_bar_provider.dart';
 import 'package:client/presentation/views/categories/categories.dart';

@@ -1,6 +1,4 @@
 import 'package:client/presentation/providers/side_bar_provider.dart';
-import 'package:client/presentation/providers/product_detail_provider.dart';
-import 'package:client/presentation/providers/product_list_provider.dart';
 import 'package:client/presentation/views/home_screen.dart';
 import 'package:client/presentation/views/login_screen.dart';
 import 'package:flutter/material.dart';

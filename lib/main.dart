@@ -5,8 +5,11 @@ import 'package:client/core/routes.dart';
 import 'package:client/core/theme.dart';
 import 'package:client/core/logger.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +21,9 @@ void main() async {
       ..e(object)
       ..e(stackTrace);
   });
-
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await DI.init();
 
   runApp(EasyLocalization(

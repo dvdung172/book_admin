@@ -1,4 +1,9 @@
+import 'package:client/presentation/views/categories/categories_table.dart';
 import 'package:flutter/material.dart';
+
+import '../../../core/responsive.dart';
+import '../../../core/theme.dart';
+import '../../../data/repositories/categories_repository.dart';
 
 class Categories extends StatefulWidget {
   const Categories({Key? key}) : super(key: key);
@@ -12,6 +17,55 @@ class _CategoriesState extends State<Categories> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container());
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Categories', style: CustomTheme.mainTheme.textTheme.headline1),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 14),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                        width: Responsive.isDesktop(context) ? 500:double.infinity,
+                        height: 36,
+                        child: const TextField(
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(vertical: 0),
+                            prefixIcon: Icon(Icons.search),
+                            border: OutlineInputBorder(),
+                            hintText: 'Search...',
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        child: Text('Add'),
+                        onPressed: () async {
+                          // Navigator.push(context,MaterialPageRoute(builder: (context) => const AddProduct()),
+                          // );
+                          // CategoryRepository().getAllCategories();
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(top: 14),
+            ),
+            Center(child: const CategoriesTable()),
+          ],
+        ),
+      ),
+    );
   }
 }
