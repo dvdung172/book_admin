@@ -1,12 +1,9 @@
-import 'package:client/data/repositories/api_connection.dart';
-import 'package:client/data/repositories/mocks/api_connection_mock.dart';
-import 'package:client/data/repositories/mocks/product_repository_mock.dart';
-import 'package:client/data/repositories/product_repository.dart';
+import 'package:client/data/repositories/categories_repository.dart';
 import 'package:client/presentation/providers/side_bar_provider.dart';
-import 'package:client/presentation/providers/product_detail_provider.dart';
-import 'package:client/presentation/providers/product_list_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
+
+import '../presentation/providers/categories_provider.dart';
 
 /// service locator
 final sl = GetIt.instance;
@@ -14,15 +11,15 @@ final sl = GetIt.instance;
 /// Dependency injection utility
 class DI {
   static Future<void> init() async {
-    sl.registerLazySingleton<ApiConnection>(
-      () => !kDebugMode
-          ? ApiConnection(apiConfig: ApiConfig())
-          : ApiConnectionMock(apiConfig: ApiConfig()),
-    );
-
-    // Repositories
-    sl.registerLazySingleton<ProductRepository>(
-      () => ProductRepositoryMock(connection: sl()),
+    // sl.registerLazySingleton<ApiConnection>(
+    //   () => !kDebugMode
+    //       ? ApiConnection(apiConfig: ApiConfig())
+    //       : ApiConnectionMock(apiConfig: ApiConfig()),
+    // );
+    //
+    // // Repositories
+    sl.registerLazySingleton<CategoryRepository>(
+      () => CategoryRepository(),
     );
 
     // Providers
@@ -30,11 +27,11 @@ class DI {
       () => SideBarProvider(),
     );
 
-    sl.registerLazySingleton<ProductListProvider>(
-      () => ProductListProvider(sl()),
+    sl.registerLazySingleton<CategoryProvider>(
+      () => CategoryProvider(sl()),
     );
-    sl.registerLazySingleton<ProductDetailProvider>(
-      () => ProductDetailProvider(sl()),
-    );
+    // sl.registerLazySingleton<ProductDetailProvider>(
+    //   () => ProductDetailProvider(sl()),
+    // );
   }
 }

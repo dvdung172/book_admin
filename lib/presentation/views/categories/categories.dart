@@ -1,3 +1,4 @@
+import 'package:client/presentation/views/categories/categories_form.dart';
 import 'package:client/presentation/views/categories/categories_table.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,8 @@ class Categories extends StatefulWidget {
 }
 
 class _CategoriesState extends State<Categories> {
-
+  final CategoryRepository _categoryRepository = CategoryRepository();
+  String textSearch = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +28,8 @@ class _CategoriesState extends State<Categories> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Categories', style: CustomTheme.mainTheme.textTheme.headline1),
+                  Text('Categories',
+                      style: CustomTheme.mainTheme.textTheme.headline1),
                   const Padding(
                     padding: EdgeInsets.only(top: 14),
                   ),
@@ -35,23 +38,31 @@ class _CategoriesState extends State<Categories> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       SizedBox(
-                        width: Responsive.isDesktop(context) ? 500:double.infinity,
+                        width: Responsive.isDesktop(context)
+                            ? 500
+                            : double.infinity,
                         height: 36,
-                        child: const TextField(
-                          decoration: InputDecoration(
+                        child: TextField(
+                          decoration: const InputDecoration(
                             contentPadding: EdgeInsets.symmetric(vertical: 0),
                             prefixIcon: Icon(Icons.search),
                             border: OutlineInputBorder(),
                             hintText: 'Search...',
                           ),
+                          onChanged: (text) {
+                            setState(() {
+                              textSearch = text;
+                            });
+                          },
                         ),
                       ),
                       ElevatedButton(
-                        child: Text('Add'),
+                        child: const Text('Add'),
                         onPressed: () async {
-                          // Navigator.push(context,MaterialPageRoute(builder: (context) => const AddProduct()),
-                          // );
-                          // CategoryRepository().getAllCategories();
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>  CategoryForm(repository: _categoryRepository,)));
                         },
                       ),
                     ],
@@ -62,7 +73,10 @@ class _CategoriesState extends State<Categories> {
             const Padding(
               padding: EdgeInsets.only(top: 14),
             ),
-            Center(child: const CategoriesTable()),
+            Center(
+                child: CategoriesTable(
+              repository: _categoryRepository, textSearch: textSearch,
+            )),
           ],
         ),
       ),
