@@ -1,34 +1,24 @@
-import 'dart:io';
 import 'dart:typed_data';
-
-import 'package:client/core/responsive.dart';
-import 'package:client/data/models/category.dart';
-import 'package:client/data/repositories/categories_repository.dart';
+import 'package:client/data/models/author.dart';
+import 'package:client/data/repositories/authors_repository.dart';
 import 'package:client/presentation/widgets/add_text_field.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:client/core/theme.dart';
-import 'package:client/presentation/providers/side_bar_provider.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as path;
-import 'package:firebase_storage/firebase_storage.dart';
-
-import '../../../core/di.dart';
 import '../dashboard/component/appBarActionItems.dart';
-import '../sideMenu.dart';
 
-class CategoryForm extends StatefulWidget {
-  const CategoryForm({Key? key, required this.repository, this.category}) : super(key: key);
-  final CategoryRepository repository;
-  final Category? category;
+class AuthorForm extends StatefulWidget {
+  const AuthorForm({Key? key, required this.repository, this.author}) : super(key: key);
+  final AuthorRepository repository;
+  final Author? author;
   @override
-  State<CategoryForm> createState() => _CategoryFormState();
+  State<AuthorForm> createState() => _AuthorFormState();
 }
 
-class _CategoryFormState extends State<CategoryForm> {
+class _AuthorFormState extends State<AuthorForm> {
 
-  CategoryRepository get repository => widget.repository;
-  Category? get category => widget.category;
+  AuthorRepository get repository => widget.repository;
+  Author? get author => widget.author;
 
   var _image;
   final TextEditingController _nameController = TextEditingController();
@@ -38,9 +28,9 @@ class _CategoryFormState extends State<CategoryForm> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if(category != null){
-      _nameController.text = category!.name!;
-      _descriptionController.text = category!.description!;
+    if(author != null){
+      _nameController.text = author!.name!;
+      _descriptionController.text = author!.description!;
     }
   }
   @override
@@ -66,7 +56,7 @@ class _CategoryFormState extends State<CategoryForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Add Category',
+              Text('Add Author',
                   style: CustomTheme.mainTheme.textTheme.headline1),
               const Padding(
                 padding: EdgeInsets.only(top: 21),
@@ -100,7 +90,7 @@ class _CategoryFormState extends State<CategoryForm> {
                         width: 200,
                         height: 200,
                         child:  _image == null
-                            ? (category != null && category?.image != "") ? Image(image: NetworkImage('${category!.image}')) : Image.asset("assets/image/img.png")
+                            ? (author != null && author?.image != "") ? Image(image: NetworkImage('${author!.image}')) : Image.asset("assets/image/img.png")
                             : Image.memory(_image),
                       ),
                     ),
@@ -146,12 +136,12 @@ class _CategoryFormState extends State<CategoryForm> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             ElevatedButton(
-                              child: category != null ? Text('Update') : Text('Create') ,
+                              child: author != null ? Text('Update') : Text('Create') ,
                               onPressed: () async {
-                                if(category != null){
-                                  await repository.updateCategory( category: category!,name: _nameController.text, image: _image, description: _descriptionController.text,);
+                                if(author != null){
+                                  await repository.updateAuthor( author: author!,name: _nameController.text, image: _image, description: _descriptionController.text,);
                                 } else {
-                                  await repository.createCategory(name: _nameController.text, image: _image, description: _descriptionController.text);
+                                  await repository.createAuthor(name: _nameController.text, image: _image, description: _descriptionController.text);
                                 }
                                 Navigator.pop(context);
                               },

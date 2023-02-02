@@ -1,21 +1,20 @@
 
-import 'package:client/data/repositories/products_repository.dart';
-import 'package:client/presentation/views/products/products_form.dart';
-import 'package:client/presentation/views/products/products_table.dart';
+import 'package:client/data/repositories/orders_repository.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/responsive.dart';
 import '../../../core/theme.dart';
+import 'orders_table.dart';
 
-class Products extends StatefulWidget {
-  const Products({Key? key}) : super(key: key);
+class Orders extends StatefulWidget {
+  const Orders({Key? key}) : super(key: key);
 
   @override
-  State<Products> createState() => _ProductsState();
+  State<Orders> createState() => _OrdersState();
 }
 
-class _ProductsState extends State<Products> {
-  final ProductRepository _productRepository = ProductRepository();
+class _OrdersState extends State<Orders> {
+  final OrderRepository _productRepository = OrderRepository();
   String textSearch = "";
   @override
   Widget build(BuildContext context) {
@@ -29,7 +28,7 @@ class _ProductsState extends State<Products> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Product',
+                  Text('Order',
                       style: CustomTheme.mainTheme.textTheme.headline1),
                   const Padding(
                     padding: EdgeInsets.only(top: 14),
@@ -57,15 +56,6 @@ class _ProductsState extends State<Products> {
                           },
                         ),
                       ),
-                      ElevatedButton(
-                        child: const Text('Add'),
-                        onPressed: () async {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>  ProductsForm(repository: _productRepository,)));
-                        },
-                      ),
                     ],
                   ),
                 ],
@@ -75,7 +65,7 @@ class _ProductsState extends State<Products> {
               padding: EdgeInsets.only(top: 14),
             ),
             Center(
-                child: ProductsTable(
+                child: OrdersTable(
               repository: _productRepository, textSearch: textSearch,
             )),
           ],

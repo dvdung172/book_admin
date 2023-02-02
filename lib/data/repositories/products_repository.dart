@@ -1,40 +1,33 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:client/data/models/category.dart';
+import 'package:client/data/models/product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:image_picker/image_picker.dart';
 
-class CategoryRepository {
+class ProductRepository {
   final CollectionReference collection =
-  FirebaseFirestore.instance.collection('categories').withConverter<Category>(
-    fromFirestore: (snapshot, _) => Category.fromJson(snapshot.id,snapshot.data()!),
-    toFirestore: (category, _) => category.toJson(),
+  FirebaseFirestore.instance.collection('products').withConverter<Product>(
+    fromFirestore: (snapshot, _) => Product.fromJson(snapshot.id,snapshot.data()!),
+    toFirestore: (product, _) => product.toJson(),
   );
-  Future<List<String>> getAllCategories() async {
-    final docs = (await collection.get()).docs;
-    List<String> data = docs.map((e) => (e.data() as Category).name!).toList();
-    return data;
-  }
-  Stream<QuerySnapshot<Object?>> getAllCategoriesWithStream({required String filter})  {
+  Stream<QuerySnapshot<Object?>> getAllProductsWithStream({required String filter})  {
     final searchdata = collection
         .where('name', isGreaterThanOrEqualTo: filter)
         .where('name', isLessThan: filter +'z')
-    // .orderBy('createdAt', descending: true)
+        // .orderBy('createdAt', descending: true)
         .snapshots();
     final data = collection
         .snapshots();
 
     return filter.isNotEmpty ? searchdata : data;
   }
-  Future<void> createCategory({required String name, required Uint8List? image, required String description}) async {
+  Future<void> createProduct({required String name, required Uint8List? image, required String description,required String author,required String category,required String publisher,required int price,required int stock,required bool isActived}) async {
     EasyLoading.show(status: 'loading...', maskType: EasyLoadingMaskType.black);
-    final _category = Category( name: name, description: description, image: '', createdAt: DateTime.now());
-    await collection.add(_category).then((value) async {
+    final _product = Product( name: name, description: description, image: '', createdAt: DateTime.now(), author: author, category: category, publisher: publisher, price: price, stock: stock, isActived: isActived);
+    await collection.add(_product).then((value) async {
       if(image != null){
         //image name
         String uniqueName = DateTime.now().millisecondsSinceEpoch.toString();
@@ -50,23 +43,29 @@ class CategoryRepository {
             EasyLoading.showSuccess(' Success!');
           });
         } catch (error) {
-          EasyLoading.showSuccess('Create Category without image');
+          EasyLoading.showSuccess('Create Product without image');
         }
       } else
         {
-          EasyLoading.showSuccess('Create Category without image');
+          EasyLoading.showSuccess('Create Product without image');
         }
     });
 
   }
-  Future<void> updateCategory({required Category category, required String name, required Uint8List? image, required String description}) async {
+  Future<void> updateProduct({required Product product, required String name, required Uint8List? image, required String description,required String author,required String category,required String publisher,required int price,required int stock,required bool isActived}) async {
     EasyLoading.show(status: 'loading...', maskType: EasyLoadingMaskType.black);
-    await collection.doc(category.id!).update({
+    await collection.doc(product.id!).update({
       "name": name,
       "description": description,
+      "NXB": publisher,
+      "author": author,
+      "category": category,
+      "isActived": isActived,
+      "price": price,
+      "stock": stock,
     }).then((value) async {
       if(image != null){
-        if(category.image == "" || category.image == null){
+        if(product.image == "" || product.image == null){
           //image name
           String uniqueName = DateTime.now().millisecondsSinceEpoch.toString();
           // storage reference2
@@ -77,39 +76,49 @@ class CategoryRepository {
             await referenceImageToUpload.putData(image!,SettableMetadata(contentType: 'image/png'),)
                 .whenComplete(() async {
               final _fileURL = await referenceImageToUpload.getDownloadURL();
-              await collection.doc(category.id!).update({'image': _fileURL });
+              await collection.doc(product.id!).update({'image': _fileURL });
               EasyLoading.showSuccess(' Success!');
             });
           } catch (error) {
-            EasyLoading.showSuccess('Create Category without image');
+            EasyLoading.showSuccess('Create Publisher without image');
           }
         } else {
-          Reference referenceImageToUpload = FirebaseStorage.instance.refFromURL(category.image!);
+          Reference referenceImageToUpload = FirebaseStorage.instance.refFromURL(product.image!);
           try {
             await referenceImageToUpload.putData(image!,SettableMetadata(contentType: 'image/png'),)
                 .whenComplete(() async {
               final _fileURL = await referenceImageToUpload
                   .getDownloadURL();
-              await collection.doc(category.id!).update({'image': _fileURL });
+              await collection.doc(product.id!).update({'image': _fileURL });
               EasyLoading.showSuccess(' Success!');
             });
           } catch (error) {
-            EasyLoading.showSuccess('Create Category without image');
+            EasyLoading.showSuccess('Create Publisher without image');
           }
         }
 
       } else {
-      EasyLoading.showSuccess('Create Category without image');
+      EasyLoading.showSuccess('Create Product without image');
       }
     });
 
   }
 
-  Future<void> deleteCategory({required String id}) async {
+  Future<void> isActivedProduct({required String id, required bool value}) async {
+    EasyLoading.show(status: 'loading...', maskType: EasyLoadingMaskType.black);
+    await collection.doc(id).update({'isActived' : value});
+    EasyLoading.dismiss();
+
+  }
+  Future<void> deleteProduct({required String id}) async {
     EasyLoading.show(status: 'loading...', maskType: EasyLoadingMaskType.black);
     await collection.doc(id).delete();
     EasyLoading.showSuccess(' Success!');
 
   }
 
+  Future<int> countCollecion() async {
+    AggregateQuerySnapshot query = await collection.count().get();
+    return query.count;
+  }
 }

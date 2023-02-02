@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:client/data/models/category.dart';
+import 'package:client/data/models/author.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -9,18 +9,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 
-class CategoryRepository {
+class AuthorRepository {
   final CollectionReference collection =
-  FirebaseFirestore.instance.collection('categories').withConverter<Category>(
-    fromFirestore: (snapshot, _) => Category.fromJson(snapshot.id,snapshot.data()!),
-    toFirestore: (category, _) => category.toJson(),
+  FirebaseFirestore.instance.collection('author').withConverter<Author>(
+    fromFirestore: (snapshot, _) => Author.fromJson(snapshot.id,snapshot.data()!),
+    toFirestore: (author, _) => author.toJson(),
   );
-  Future<List<String>> getAllCategories() async {
+
+  Future<List<String>> getAllauthors() async {
     final docs = (await collection.get()).docs;
-    List<String> data = docs.map((e) => (e.data() as Category).name!).toList();
+    List<String> data = docs.map((e) => (e.data() as Author).name!).toList();
     return data;
   }
-  Stream<QuerySnapshot<Object?>> getAllCategoriesWithStream({required String filter})  {
+
+  Stream<QuerySnapshot<Object?>> getAllAuthorsWithStream({required String filter})  {
     final searchdata = collection
         .where('name', isGreaterThanOrEqualTo: filter)
         .where('name', isLessThan: filter +'z')
@@ -31,10 +33,11 @@ class CategoryRepository {
 
     return filter.isNotEmpty ? searchdata : data;
   }
-  Future<void> createCategory({required String name, required Uint8List? image, required String description}) async {
+
+  Future<void> createAuthor({required String name, required Uint8List? image, required String description}) async {
     EasyLoading.show(status: 'loading...', maskType: EasyLoadingMaskType.black);
-    final _category = Category( name: name, description: description, image: '', createdAt: DateTime.now());
-    await collection.add(_category).then((value) async {
+    final _author = Author( name: name, description: description, image: '', createdAt: DateTime.now());
+    await collection.add(_author).then((value) async {
       if(image != null){
         //image name
         String uniqueName = DateTime.now().millisecondsSinceEpoch.toString();
@@ -50,23 +53,23 @@ class CategoryRepository {
             EasyLoading.showSuccess(' Success!');
           });
         } catch (error) {
-          EasyLoading.showSuccess('Create Category without image');
+          EasyLoading.showSuccess('Create Author without image');
         }
       } else
         {
-          EasyLoading.showSuccess('Create Category without image');
+          EasyLoading.showSuccess('Create Author without image');
         }
     });
 
   }
-  Future<void> updateCategory({required Category category, required String name, required Uint8List? image, required String description}) async {
+  Future<void> updateAuthor({required Author author, required String name, required Uint8List? image, required String description}) async {
     EasyLoading.show(status: 'loading...', maskType: EasyLoadingMaskType.black);
-    await collection.doc(category.id!).update({
+    await collection.doc(author.id!).update({
       "name": name,
       "description": description,
     }).then((value) async {
       if(image != null){
-        if(category.image == "" || category.image == null){
+        if(author.image == "" || author.image == null){
           //image name
           String uniqueName = DateTime.now().millisecondsSinceEpoch.toString();
           // storage reference2
@@ -77,35 +80,35 @@ class CategoryRepository {
             await referenceImageToUpload.putData(image!,SettableMetadata(contentType: 'image/png'),)
                 .whenComplete(() async {
               final _fileURL = await referenceImageToUpload.getDownloadURL();
-              await collection.doc(category.id!).update({'image': _fileURL });
+              await collection.doc(author.id!).update({'image': _fileURL });
               EasyLoading.showSuccess(' Success!');
             });
           } catch (error) {
-            EasyLoading.showSuccess('Create Category without image');
+            EasyLoading.showSuccess('Create Author without image');
           }
         } else {
-          Reference referenceImageToUpload = FirebaseStorage.instance.refFromURL(category.image!);
+          Reference referenceImageToUpload = FirebaseStorage.instance.refFromURL(author.image!);
           try {
             await referenceImageToUpload.putData(image!,SettableMetadata(contentType: 'image/png'),)
                 .whenComplete(() async {
               final _fileURL = await referenceImageToUpload
                   .getDownloadURL();
-              await collection.doc(category.id!).update({'image': _fileURL });
+              await collection.doc(author.id!).update({'image': _fileURL });
               EasyLoading.showSuccess(' Success!');
             });
           } catch (error) {
-            EasyLoading.showSuccess('Create Category without image');
+            EasyLoading.showSuccess('Create Author without image');
           }
         }
 
       } else {
-      EasyLoading.showSuccess('Create Category without image');
+      EasyLoading.showSuccess('Create Author without image');
       }
     });
 
   }
 
-  Future<void> deleteCategory({required String id}) async {
+  Future<void> deleteAuthor({required String id}) async {
     EasyLoading.show(status: 'loading...', maskType: EasyLoadingMaskType.black);
     await collection.doc(id).delete();
     EasyLoading.showSuccess(' Success!');

@@ -1,28 +1,30 @@
 import 'package:client/core/theme.dart';
+import 'package:client/data/models/author.dart';
 import 'package:client/presentation/providers/side_bar_provider.dart';
+import 'package:client/presentation/views/authors/authors.dart';
 import 'package:client/presentation/views/categories/categories.dart';
+import 'package:client/presentation/views/customers/customers.dart';
 import 'package:client/presentation/views/dashboard/dashboard.dart';
+import 'package:client/presentation/views/orders/orders.dart';
 import 'package:client/presentation/views/products/products.dart';
+import 'package:client/presentation/views/publishers/publishers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dashboard/component/appBarActionItems.dart';
-import 'dashboard/component/barChart.dart';
-import 'dashboard/component/header.dart';
-import 'dashboard/component/historyTable.dart';
-import 'dashboard/component/infoCard.dart';
-import 'dashboard/component/paymentDetailList.dart';
 import 'sideMenu.dart';
-import '../../core/responsive.dart';
 import '../../core/size_config.dart';
-import '../../core/style.dart';
 
 class HomeScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey<ScaffoldState>();
   HomeScreen({Key? key}) : super(key: key) {
     _tabList = <Widget>[
       const DashBoard(key: ValueKey(0)),
-      const Categories(key: ValueKey(2)),
-      const Products(key: ValueKey(1)),
+      const Categories(key: ValueKey(1)),
+      const Authors(key: ValueKey(2)),
+      const Publishers(key: ValueKey(3)),
+      const Products(key: ValueKey(4)),
+      const Orders(key: ValueKey(5)),
+      const Customers(key: ValueKey(6)),
     ];
   }
 

@@ -1,21 +1,21 @@
 
-import 'package:client/data/repositories/products_repository.dart';
-import 'package:client/presentation/views/products/products_form.dart';
-import 'package:client/presentation/views/products/products_table.dart';
+import 'package:client/data/repositories/publishers_repository.dart';
+import 'package:client/presentation/views/publishers/publishers_form.dart';
+import 'package:client/presentation/views/publishers/publishers_table.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/responsive.dart';
 import '../../../core/theme.dart';
 
-class Products extends StatefulWidget {
-  const Products({Key? key}) : super(key: key);
+class Publishers extends StatefulWidget {
+  const Publishers({Key? key}) : super(key: key);
 
   @override
-  State<Products> createState() => _ProductsState();
+  State<Publishers> createState() => _PublishersState();
 }
 
-class _ProductsState extends State<Products> {
-  final ProductRepository _productRepository = ProductRepository();
+class _PublishersState extends State<Publishers> {
+  final PublisherRepository _publisherRepository = PublisherRepository();
   String textSearch = "";
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class _ProductsState extends State<Products> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Product',
+                  Text('Publishers',
                       style: CustomTheme.mainTheme.textTheme.headline1),
                   const Padding(
                     padding: EdgeInsets.only(top: 14),
@@ -63,7 +63,7 @@ class _ProductsState extends State<Products> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>  ProductsForm(repository: _productRepository,)));
+                                  builder: (context) =>  PublisherForm(repository: _publisherRepository,)));
                         },
                       ),
                     ],
@@ -75,8 +75,8 @@ class _ProductsState extends State<Products> {
               padding: EdgeInsets.only(top: 14),
             ),
             Center(
-                child: ProductsTable(
-              repository: _productRepository, textSearch: textSearch,
+                child: PublishersTable(
+              repository: _publisherRepository, textSearch: textSearch,
             )),
           ],
         ),

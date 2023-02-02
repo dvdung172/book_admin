@@ -1,40 +1,40 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:client/data/models/category.dart';
+import 'package:client/data/models/publisher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:image_picker/image_picker.dart';
 
-class CategoryRepository {
+class PublisherRepository {
   final CollectionReference collection =
-  FirebaseFirestore.instance.collection('categories').withConverter<Category>(
-    fromFirestore: (snapshot, _) => Category.fromJson(snapshot.id,snapshot.data()!),
-    toFirestore: (category, _) => category.toJson(),
+  FirebaseFirestore.instance.collection('NXB').withConverter<Publisher>(
+    fromFirestore: (snapshot, _) => Publisher.fromJson(snapshot.id,snapshot.data()!),
+    toFirestore: (publisher, _) => publisher.toJson(),
   );
-  Future<List<String>> getAllCategories() async {
+
+  Future<List<String>> getAllPublishers() async {
     final docs = (await collection.get()).docs;
-    List<String> data = docs.map((e) => (e.data() as Category).name!).toList();
+    List<String> data = docs.map((e) => (e.data() as Publisher).name!).toList();
     return data;
   }
-  Stream<QuerySnapshot<Object?>> getAllCategoriesWithStream({required String filter})  {
+
+  Stream<QuerySnapshot<Object?>> getAllPublishersWithStream({required String filter})  {
     final searchdata = collection
         .where('name', isGreaterThanOrEqualTo: filter)
         .where('name', isLessThan: filter +'z')
-    // .orderBy('createdAt', descending: true)
+        // .orderBy('createdAt', descending: true)
         .snapshots();
     final data = collection
         .snapshots();
 
     return filter.isNotEmpty ? searchdata : data;
   }
-  Future<void> createCategory({required String name, required Uint8List? image, required String description}) async {
+  Future<void> createPublisher({required String name, required Uint8List? image, required String description}) async {
     EasyLoading.show(status: 'loading...', maskType: EasyLoadingMaskType.black);
-    final _category = Category( name: name, description: description, image: '', createdAt: DateTime.now());
-    await collection.add(_category).then((value) async {
+    final _publisher = Publisher( name: name, description: description, image: '', createdAt: DateTime.now());
+    await collection.add(_publisher).then((value) async {
       if(image != null){
         //image name
         String uniqueName = DateTime.now().millisecondsSinceEpoch.toString();
@@ -50,23 +50,23 @@ class CategoryRepository {
             EasyLoading.showSuccess(' Success!');
           });
         } catch (error) {
-          EasyLoading.showSuccess('Create Category without image');
+          EasyLoading.showSuccess('Create Publisher without image');
         }
       } else
         {
-          EasyLoading.showSuccess('Create Category without image');
+          EasyLoading.showSuccess('Create Publisher without image');
         }
     });
 
   }
-  Future<void> updateCategory({required Category category, required String name, required Uint8List? image, required String description}) async {
+  Future<void> updatePublisher({required Publisher publisher, required String name, required Uint8List? image, required String description}) async {
     EasyLoading.show(status: 'loading...', maskType: EasyLoadingMaskType.black);
-    await collection.doc(category.id!).update({
+    await collection.doc(publisher.id!).update({
       "name": name,
       "description": description,
     }).then((value) async {
       if(image != null){
-        if(category.image == "" || category.image == null){
+        if(publisher.image == "" || publisher.image == null){
           //image name
           String uniqueName = DateTime.now().millisecondsSinceEpoch.toString();
           // storage reference2
@@ -77,35 +77,35 @@ class CategoryRepository {
             await referenceImageToUpload.putData(image!,SettableMetadata(contentType: 'image/png'),)
                 .whenComplete(() async {
               final _fileURL = await referenceImageToUpload.getDownloadURL();
-              await collection.doc(category.id!).update({'image': _fileURL });
+              await collection.doc(publisher.id!).update({'image': _fileURL });
               EasyLoading.showSuccess(' Success!');
             });
           } catch (error) {
-            EasyLoading.showSuccess('Create Category without image');
+            EasyLoading.showSuccess('Create Publisher without image');
           }
         } else {
-          Reference referenceImageToUpload = FirebaseStorage.instance.refFromURL(category.image!);
+          Reference referenceImageToUpload = FirebaseStorage.instance.refFromURL(publisher.image!);
           try {
             await referenceImageToUpload.putData(image!,SettableMetadata(contentType: 'image/png'),)
                 .whenComplete(() async {
               final _fileURL = await referenceImageToUpload
                   .getDownloadURL();
-              await collection.doc(category.id!).update({'image': _fileURL });
+              await collection.doc(publisher.id!).update({'image': _fileURL });
               EasyLoading.showSuccess(' Success!');
             });
           } catch (error) {
-            EasyLoading.showSuccess('Create Category without image');
+            EasyLoading.showSuccess('Create Publisher without image');
           }
         }
 
       } else {
-      EasyLoading.showSuccess('Create Category without image');
+      EasyLoading.showSuccess('Create Publisher without image');
       }
     });
 
   }
 
-  Future<void> deleteCategory({required String id}) async {
+  Future<void> deletePublisher({required String id}) async {
     EasyLoading.show(status: 'loading...', maskType: EasyLoadingMaskType.black);
     await collection.doc(id).delete();
     EasyLoading.showSuccess(' Success!');

@@ -1,25 +1,22 @@
-import 'dart:math';
-import 'dart:typed_data';
 
-import 'package:client/data/models/category.dart';
-import 'package:client/data/repositories/categories_repository.dart';
+import 'package:client/data/models/product.dart';
+import 'package:client/data/repositories/products_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../widgets/CustomCell.dart';
-import 'categories_form.dart';
+import 'products_form.dart';
 
-class CategoriesTable extends StatelessWidget {
-  const CategoriesTable({Key? key, required this.repository, required this.textSearch}) : super(key: key);
-  final CategoryRepository repository;
+class ProductsTable extends StatelessWidget {
+  const ProductsTable({Key? key, required this.repository, required this.textSearch}) : super(key: key);
+  final ProductRepository repository;
   final String textSearch;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot<Object?>>(
-      stream: repository.getAllCategoriesWithStream(filter: textSearch),
+      stream: repository.getAllProductsWithStream(filter: textSearch),
       builder: (BuildContext context,
           AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
         if (snapshot.hasError) {
@@ -32,11 +29,11 @@ class CategoriesTable extends StatelessWidget {
         }
         else
         {
-          List<Category> data = snapshot.data!.docs.map((e) => e.data() as Category).toList();
+          List<Product> data = snapshot.data!.docs.map((e) => e.data() as Product).toList();
           data.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
           return PaginatedDataTable(
             dataRowHeight: 70,
-            source: CategoriesSource(data: data, context: context, repository: repository),
+            source: ProductsSource(data: data, context: context, repository: repository),
             columns: const <DataColumn>[
               DataColumn(
                 label: Expanded(
@@ -65,7 +62,55 @@ class CategoriesTable extends StatelessWidget {
               DataColumn(
                 label: Expanded(
                   child: Text(
+                    'Author',
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    'Category',
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    'Publisher',
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    'Price',
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    'Stock',
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Expanded(
+                  child: Text(
                     'Description',
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Expanded(
+                  child: Text(
+                    'Active',
                     style: TextStyle(fontStyle: FontStyle.italic),
                   ),
                 ),
@@ -95,11 +140,11 @@ class CategoriesTable extends StatelessWidget {
   }
 }
 
-class CategoriesSource extends DataTableSource {
-  CategoriesSource({required this.context,required this.data,required this.repository});
+class ProductsSource extends DataTableSource {
+  ProductsSource({required this.context,required this.data,required this.repository});
   final BuildContext context;
-  final List<Category> data;
-  final CategoryRepository repository;
+  final List<Product> data;
+  final ProductRepository repository;
 
   @override
   DataRow? getRow(int index) {
@@ -114,11 +159,24 @@ class CategoriesSource extends DataTableSource {
             : Image.asset("assets/image/img.png"),
       )),
       DataCell(TextCell('${data[index].name}')),
+      DataCell(TextCell('${data[index].author}')),
+      DataCell(TextCell('${data[index].category}',)),
+      DataCell(TextCell('${data[index].publisher}',)),
+      DataCell(TextCell('${data[index].price}',)),
+      DataCell(TextCell('${data[index].stock}',)),
       DataCell(Container(
           constraints: const BoxConstraints(
               minWidth: 150, maxWidth: 300),
           child: Text('${data[index].description}', overflow: TextOverflow.ellipsis,))),
-      DataCell(TextCell('${data[index].createdAt}')),
+
+      DataCell(Switch(
+        value: data[index].isActived,
+        activeColor: Colors.blue,
+        onChanged: (bool value) async {
+          await repository.isActivedProduct(id: data[index].id!, value: value);
+        },
+      ),),
+      DataCell(Text('${data[index].createdAt}')),
       DataCell(Row(
         children: [
           IconButton(
@@ -128,7 +186,7 @@ class CategoriesSource extends DataTableSource {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>  CategoryForm(repository: repository, category: data[index])));
+                      builder: (context) =>  ProductsForm(repository: repository, product: data[index])));
             },
           ),
           IconButton(
@@ -148,7 +206,7 @@ class CategoriesSource extends DataTableSource {
                         isDefaultAction: true,
                         child: Text("Yes"),
                         onPressed: () async {
-                          await repository.deleteCategory(id: data[index].id!);
+                          await repository.deleteProduct(id: data[index].id!);
                           Navigator.pop(context);
                         },
                       ),

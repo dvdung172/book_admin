@@ -2,17 +2,44 @@ import 'package:client/core/responsive.dart';
 import 'package:client/core/size_config.dart';
 import 'package:client/core/style.dart';
 import 'package:client/core/theme.dart';
+import 'package:client/data/repositories/customers_repository.dart';
+import 'package:client/data/repositories/orders_repository.dart';
+import 'package:client/data/repositories/products_repository.dart';
 import 'package:flutter/material.dart';
 
 import 'component/barChart.dart';
 import 'component/header.dart';
 import 'component/historyTable.dart';
 import 'component/infoCard.dart';
-import 'component/paymentDetailList.dart';
 
-class DashBoard extends StatelessWidget {
+class DashBoard extends StatefulWidget {
   const DashBoard({Key? key}) : super(key: key);
 
+  @override
+  State<DashBoard> createState() => _DashBoardState();
+}
+
+class _DashBoardState extends State<DashBoard> {
+  var customerCount = 0;
+  var productCount = 0;
+  var orderCount = 0;
+  var avgSaleCount = 0.0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    OrderRepository().countCollecion().then((value) => setState(() {
+      orderCount = value;
+      OrderRepository().sumOrder().then((value) => setState(() { avgSaleCount = value/orderCount; }) );
+    }) );
+    ProductRepository().countCollecion().then((value) => setState(() { productCount = value; }) );
+    CustomerRepository().countCollecion().then((value) => setState(() { customerCount = value; }) );
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -38,104 +65,87 @@ class DashBoard extends StatelessWidget {
                         alignment: WrapAlignment.spaceBetween,
                         children: [
                           InfoCard(
-                              icon: 'assets/icon/credit-card.svg',
-                              label: 'Transafer via \nCard number',
-                              amount: '\$1200'),
-                          InfoCard(
-                              icon: 'assets/icon/transfer.svg',
-                              label: 'Transafer via \nOnline Banks',
-                              amount: '\$150'),
-                          InfoCard(
-                              icon: 'assets/icon/bank.svg',
-                              label: 'Transafer \nSame Bank',
-                              amount: '\$1500'),
+                              icon: 'assets/icon/customer.svg',
+                              label: 'Customer',
+                              amount: '${customerCount}'),
                           InfoCard(
                               icon: 'assets/icon/invoice.svg',
-                              label: 'Transafer to \nOther Bank',
-                              amount: '\$1500'),
+                              label: 'Order',
+                              amount: '${orderCount}'),
+                          InfoCard(
+                              icon: 'assets/icon/book.svg',
+                              label: 'Product',
+                              amount: '${productCount}'),
+                          InfoCard(
+                              icon: 'assets/icon/salary.svg',
+                              label: 'Average Sale',
+                              amount: '${avgSaleCount}'),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: SizeConfig.blockSizeVertical! * 4,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            PrimaryText(
-                              text: 'Balance',
-                              size: 16,
-                              fontWeight: FontWeight.w400,
-                              color: CustomColor.secondary,
-                            ),
-                            PrimaryText(
-                                text: '\$1500',
-                                size: 30,
-                                fontWeight: FontWeight.w800),
-                          ],
-                        ),
-                        PrimaryText(
-                          text: 'Past 30 DAYS',
-                          size: 16,
-                          fontWeight: FontWeight.w400,
-                          color: CustomColor.secondary,
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: SizeConfig.blockSizeVertical! * 3,
-                    ),
-                    Container(
-                      height: 180,
-                      child: BarChartCopmponent(),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.blockSizeVertical! * 5,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        PrimaryText(
-                            text: 'History',
-                            size: 30,
-                            fontWeight: FontWeight.w800),
-                        PrimaryText(
-                          text: 'Transaction of lat 6 month',
-                          size: 16,
-                          fontWeight: FontWeight.w400,
-                          color: CustomColor.secondary,
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: SizeConfig.blockSizeVertical! * 3,
-                    ),
-                    HistoryTable(),
-                    if (!Responsive.isDesktop(context)) PaymentDetailList()
+                    // SizedBox(
+                    //   height: SizeConfig.blockSizeVertical! * 4,
+                    // ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   crossAxisAlignment: CrossAxisAlignment.center,
+                    //   children: [
+                    //     Column(
+                    //       crossAxisAlignment: CrossAxisAlignment.start,
+                    //       children: [
+                    //         PrimaryText(
+                    //           text: 'Balance',
+                    //           size: 16,
+                    //           fontWeight: FontWeight.w400,
+                    //           color: CustomColor.secondary,
+                    //         ),
+                    //         PrimaryText(
+                    //             text: '\$1500',
+                    //             size: 30,
+                    //             fontWeight: FontWeight.w800),
+                    //       ],
+                    //     ),
+                    //     PrimaryText(
+                    //       text: 'Past 30 DAYS',
+                    //       size: 16,
+                    //       fontWeight: FontWeight.w400,
+                    //       color: CustomColor.secondary,
+                    //     ),
+                    //   ],
+                    // ),
+                    // SizedBox(
+                    //   height: SizeConfig.blockSizeVertical! * 3,
+                    // ),
+                    // Container(
+                    //   height: 180,
+                    //   child: BarChartCopmponent(),
+                    // ),
+                    // SizedBox(
+                    //   height: SizeConfig.blockSizeVertical! * 5,
+                    // ),
+                    // Column(
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   children: [
+                    //     PrimaryText(
+                    //         text: 'History',
+                    //         size: 30,
+                    //         fontWeight: FontWeight.w800),
+                    //     PrimaryText(
+                    //       text: 'Transaction of lat 6 month',
+                    //       size: 16,
+                    //       fontWeight: FontWeight.w400,
+                    //       color: CustomColor.secondary,
+                    //     ),
+                    //   ],
+                    // ),
+                    // SizedBox(
+                    //   height: SizeConfig.blockSizeVertical! * 3,
+                    // ),
+                    // HistoryTable(),
                   ],
                 ),
               ),
             )),
-        if (Responsive.isDesktop(context))
-          Expanded(
-            flex: 4,
-            child: SafeArea(
-              child: Container(
-                width: double.infinity,
-                height: SizeConfig.screenHeight,
-                decoration: BoxDecoration(color: CustomColor.secondaryBg),
-                child: SingleChildScrollView(
-                  padding:
-                  EdgeInsets.symmetric(vertical: 30, horizontal: 30),
-                  child: PaymentDetailList(),
-                ),
-              ),
-            ),
-          ),
       ],
     );
   }

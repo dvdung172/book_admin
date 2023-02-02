@@ -3,7 +3,6 @@ import 'package:client/core/theme.dart';
 import 'package:client/presentation/providers/side_bar_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
 import '../../core/size_config.dart';
 
 class SideMenu extends StatelessWidget {
@@ -40,19 +39,9 @@ class SideMenu extends StatelessWidget {
                     'assets/icon/home.svg',
                     color: CustomColor.iconGray,
                   ),
+                  tooltip: "Home",
                   onPressed: () {
                     provider.currentIndex = 0;
-                    Navigator.pop(context);
-                  }),
-              IconButton(
-                  iconSize: 20,
-                  padding: EdgeInsets.symmetric(vertical: 20.0),
-                  icon: SvgPicture.asset(
-                    'assets/icon/pie-chart.svg',
-                    color: CustomColor.iconGray,
-                  ),
-                  onPressed: () {
-                    provider.currentIndex = 1;
                     Navigator.pop(context);
                   }),
               IconButton(
@@ -62,6 +51,19 @@ class SideMenu extends StatelessWidget {
                     'assets/icon/clipboard.svg',
                     color: CustomColor.iconGray,
                   ),
+                  tooltip: "Categories",
+                  onPressed: () {
+                    provider.currentIndex = 1;
+                    Navigator.pop(context);
+                  }),
+              IconButton(
+                  iconSize: 20,
+                  padding: EdgeInsets.symmetric(vertical: 20.0),
+                  icon: SvgPicture.asset(
+                    'assets/icon/author.svg',
+                    color: CustomColor.iconGray,
+                  ),
+                  tooltip: "Authors",
                   onPressed: () {
                     provider.currentIndex = 2;
                     Navigator.pop(context);
@@ -70,9 +72,10 @@ class SideMenu extends StatelessWidget {
                   iconSize: 20,
                   padding: EdgeInsets.symmetric(vertical: 20.0),
                   icon: SvgPicture.asset(
-                    'assets/icon/credit-card.svg',
+                    'assets/icon/bank.svg',
                     color: CustomColor.iconGray,
                   ),
+                  tooltip: "Publishers",
                   onPressed: () {
                     provider.currentIndex = 3;
                     Navigator.pop(context);
@@ -81,9 +84,10 @@ class SideMenu extends StatelessWidget {
                   iconSize: 20,
                   padding: EdgeInsets.symmetric(vertical: 20.0),
                   icon: SvgPicture.asset(
-                    'assets/icon/trophy.svg',
+                    'assets/icon/book.svg',
                     color: CustomColor.iconGray,
                   ),
+                  tooltip: "Products",
                   onPressed: () {
                     provider.currentIndex = 4;
                     Navigator.pop(context);
@@ -95,8 +99,21 @@ class SideMenu extends StatelessWidget {
                     'assets/icon/invoice.svg',
                     color: CustomColor.iconGray,
                   ),
+                  tooltip: "Orders",
                   onPressed: () {
                     provider.currentIndex = 5;
+                    Navigator.pop(context);
+                  }),
+              IconButton(
+                  iconSize: 20,
+                  padding: EdgeInsets.symmetric(vertical: 20.0),
+                  icon: SvgPicture.asset(
+                    'assets/icon/customer.svg',
+                    color: CustomColor.iconGray,
+                  ),
+                  tooltip: "Customers",
+                  onPressed: () {
+                    provider.currentIndex = 6;
                     Navigator.pop(context);
                   }),
             ],

@@ -1,12 +1,15 @@
 import 'package:client/core/responsive.dart';
 import 'package:client/core/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AddTextField extends StatelessWidget {
-  AddTextField({Key? key, required this.title, this.controller})
+  AddTextField({Key? key, required this.title,required this.controller,this.inputType,this.inputFormater})
       : super(key: key);
   final String title;
-  TextEditingController? controller;
+  TextEditingController controller;
+  TextInputType? inputType;
+  List<TextInputFormatter>? inputFormater;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +26,8 @@ class AddTextField extends StatelessWidget {
             width: Responsive.isDesktop(context) ? 500 : double.infinity,
             height: 36,
             child: TextField(
+              keyboardType: inputType,
+              inputFormatters: inputFormater,
               controller: controller,
               decoration: const InputDecoration(
                   filled: true,

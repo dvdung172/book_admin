@@ -1,25 +1,21 @@
-import 'dart:math';
-import 'dart:typed_data';
-
-import 'package:client/data/models/category.dart';
-import 'package:client/data/repositories/categories_repository.dart';
+import 'package:client/data/models/author.dart';
+import 'package:client/data/repositories/authors_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../widgets/CustomCell.dart';
-import 'categories_form.dart';
+import 'authors_form.dart';
 
-class CategoriesTable extends StatelessWidget {
-  const CategoriesTable({Key? key, required this.repository, required this.textSearch}) : super(key: key);
-  final CategoryRepository repository;
+class AuthorsTable extends StatelessWidget {
+  const AuthorsTable({Key? key, required this.repository, required this.textSearch}) : super(key: key);
+  final AuthorRepository repository;
   final String textSearch;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot<Object?>>(
-      stream: repository.getAllCategoriesWithStream(filter: textSearch),
+      stream: repository.getAllAuthorsWithStream(filter: textSearch),
       builder: (BuildContext context,
           AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
         if (snapshot.hasError) {
@@ -32,7 +28,7 @@ class CategoriesTable extends StatelessWidget {
         }
         else
         {
-          List<Category> data = snapshot.data!.docs.map((e) => e.data() as Category).toList();
+          List<Author> data = snapshot.data!.docs.map((e) => e.data() as Author).toList();
           data.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
           return PaginatedDataTable(
             dataRowHeight: 70,
@@ -98,8 +94,8 @@ class CategoriesTable extends StatelessWidget {
 class CategoriesSource extends DataTableSource {
   CategoriesSource({required this.context,required this.data,required this.repository});
   final BuildContext context;
-  final List<Category> data;
-  final CategoryRepository repository;
+  final List<Author> data;
+  final AuthorRepository repository;
 
   @override
   DataRow? getRow(int index) {
@@ -128,7 +124,7 @@ class CategoriesSource extends DataTableSource {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>  CategoryForm(repository: repository, category: data[index])));
+                      builder: (context) =>  AuthorForm(repository: repository, author: data[index])));
             },
           ),
           IconButton(
@@ -148,7 +144,7 @@ class CategoriesSource extends DataTableSource {
                         isDefaultAction: true,
                         child: Text("Yes"),
                         onPressed: () async {
-                          await repository.deleteCategory(id: data[index].id!);
+                          await repository.deleteAuthor(id: data[index].id!);
                           Navigator.pop(context);
                         },
                       ),

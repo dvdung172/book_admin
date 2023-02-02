@@ -1,15 +1,16 @@
 {
   "app": {
-    "title": "Cửa hàng bán lẻ"
+    "title": "Book Admin"
   },
   "common": {
-    "ok": "Xác nhận",
-    "cancel": "Bỏ qua",
-    "select_language": "Ngôn ngữ",
-    "delete": "Xóa",
-    "close": "Đóng",
-    "back": "Trở về",
-    "login": "Đăng nhập"
+    "ok": "OK",
+    "cancel": "cancel",
+    "select_language": "Language",
+    "delete": "Delete",
+    "close": "Close",
+    "back": "Back",
+    "login": "Login",
+    "logout": "Logout"
   },
   "messages": {
     "no_internet_connection": "No Internet connection",
@@ -17,6 +18,47 @@
     "try_again": "Try again",
     "offline": "You're offline, please connect and try again",
     "server_error": "An error occurred, please try again later",
-    "can_not_connect_server": "Can't connect to the server"
+    "can_not_connect_server": "Can't connect to the server",
+    "login_failed": "Failed to login",
+    "invalid_item": "invalid {}"
+  },
+  "screens": {
+    "login": {
+      "login_with_fb": "Login with Facebook",
+      "login_with_gg": "Login with Google",
+      "remember_me": "Remember me",
+      "dont_have_account": "You don't have account?",
+      "signin": "Login",
+      "signup": "Register",
+      "signin_with": "Login with ...",
+      "email": "Email*",
+      "password": "Password*"
+    },
+    "home": {
+      "title": "Home"
+    },
+    "create": {
+      "title": "New Time Sheet"
+    }
+  },
+  "drawer": {
+    "confirm_logout_dialog": {
+      "title": "Logout",
+      "confirm_content": "Are you sure to logout?"
+    }
+  },
+  "tabs": {
+    "home": {
+      "title": "Dash Board"
+    },
+    "views": {
+      "title": "Time Sheets"
+    },
+    "settings": {
+      "title": "Settings"
+    },
+    "manage": {
+      "title": "Manager Only"
+    }
   }
 }

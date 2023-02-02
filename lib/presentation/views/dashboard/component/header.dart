@@ -5,9 +5,6 @@ import '../../../../core/style.dart';
 
 class Header extends StatelessWidget {
   const Header({Key? key}) : super(key: key);
-
-
-
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -23,38 +20,38 @@ class Header extends StatelessWidget {
                   size: 30,
                   fontWeight: FontWeight.w800),
               PrimaryText(
-                text: 'Payments updates',
+                text: 'Bookstore seller',
                 size: 16,
                 fontWeight: FontWeight.w400,
                 color: CustomColor.secondary,
               )
             ]),
       ),
-      Spacer(
-        flex: 1,
-      ),
-      Expanded(
-        flex: Responsive.isDesktop(context) ? 1 : 3,
-        child: TextField(
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: CustomColor.white,
-            contentPadding:
-                EdgeInsets.only(left: 40.0, right: 5),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: CustomColor.white),
-            ),
-             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: CustomColor.white),
-            ),
-            prefixIcon: Icon(Icons.search, color: CustomColor.black),
-            hintText: 'Search',
-            hintStyle: TextStyle(color: CustomColor.secondary, fontSize: 14)
-          ),
-        ),
-      ),
+      // Spacer(
+      //   flex: 1,
+      // ),
+      // Expanded(
+      //   flex: Responsive.isDesktop(context) ? 1 : 3,
+      //   child: TextField(
+      //     decoration: InputDecoration(
+      //       filled: true,
+      //       fillColor: CustomColor.white,
+      //       contentPadding:
+      //           EdgeInsets.only(left: 40.0, right: 5),
+      //       enabledBorder: OutlineInputBorder(
+      //         borderRadius: BorderRadius.circular(30),
+      //         borderSide: BorderSide(color: CustomColor.white),
+      //       ),
+      //        focusedBorder: OutlineInputBorder(
+      //         borderRadius: BorderRadius.circular(30),
+      //         borderSide: BorderSide(color: CustomColor.white),
+      //       ),
+      //       prefixIcon: Icon(Icons.search, color: CustomColor.black),
+      //       hintText: 'Search',
+      //       hintStyle: TextStyle(color: CustomColor.secondary, fontSize: 14)
+      //     ),
+      //   ),
+      // ),
     ]);
   }
 }

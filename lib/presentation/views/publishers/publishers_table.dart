@@ -1,25 +1,22 @@
-import 'dart:math';
-import 'dart:typed_data';
 
-import 'package:client/data/models/category.dart';
-import 'package:client/data/repositories/categories_repository.dart';
+import 'package:client/data/models/publisher.dart';
+import 'package:client/data/repositories/publishers_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../widgets/CustomCell.dart';
-import 'categories_form.dart';
+import 'publishers_form.dart';
 
-class CategoriesTable extends StatelessWidget {
-  const CategoriesTable({Key? key, required this.repository, required this.textSearch}) : super(key: key);
-  final CategoryRepository repository;
+class PublishersTable extends StatelessWidget {
+  const PublishersTable({Key? key, required this.repository, required this.textSearch}) : super(key: key);
+  final PublisherRepository repository;
   final String textSearch;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot<Object?>>(
-      stream: repository.getAllCategoriesWithStream(filter: textSearch),
+      stream: repository.getAllPublishersWithStream(filter: textSearch),
       builder: (BuildContext context,
           AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
         if (snapshot.hasError) {
@@ -32,11 +29,11 @@ class CategoriesTable extends StatelessWidget {
         }
         else
         {
-          List<Category> data = snapshot.data!.docs.map((e) => e.data() as Category).toList();
+          List<Publisher> data = snapshot.data!.docs.map((e) => e.data() as Publisher).toList();
           data.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
           return PaginatedDataTable(
             dataRowHeight: 70,
-            source: CategoriesSource(data: data, context: context, repository: repository),
+            source: PublishersSource(data: data, context: context, repository: repository),
             columns: const <DataColumn>[
               DataColumn(
                 label: Expanded(
@@ -95,11 +92,11 @@ class CategoriesTable extends StatelessWidget {
   }
 }
 
-class CategoriesSource extends DataTableSource {
-  CategoriesSource({required this.context,required this.data,required this.repository});
+class PublishersSource extends DataTableSource {
+  PublishersSource({required this.context,required this.data,required this.repository});
   final BuildContext context;
-  final List<Category> data;
-  final CategoryRepository repository;
+  final List<Publisher> data;
+  final PublisherRepository repository;
 
   @override
   DataRow? getRow(int index) {
@@ -113,7 +110,7 @@ class CategoriesSource extends DataTableSource {
             ? Image(image: NetworkImage('${data[index].image}'))
             : Image.asset("assets/image/img.png"),
       )),
-      DataCell(TextCell('${data[index].name}')),
+      DataCell(TextCell('${data[index].name}',)),
       DataCell(Container(
           constraints: const BoxConstraints(
               minWidth: 150, maxWidth: 300),
@@ -128,7 +125,7 @@ class CategoriesSource extends DataTableSource {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>  CategoryForm(repository: repository, category: data[index])));
+                      builder: (context) =>  PublisherForm(repository: repository, publisher: data[index])));
             },
           ),
           IconButton(
@@ -148,7 +145,7 @@ class CategoriesSource extends DataTableSource {
                         isDefaultAction: true,
                         child: Text("Yes"),
                         onPressed: () async {
-                          await repository.deleteCategory(id: data[index].id!);
+                          await repository.deletePublisher(id: data[index].id!);
                           Navigator.pop(context);
                         },
                       ),
