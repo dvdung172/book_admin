@@ -39,7 +39,6 @@ class OrderRepository {
         int value = (element.data()! as ProductOrder).amount!;
         count = count + value;
       }
-      print(count);
     });
     return count;
   }
@@ -62,6 +61,20 @@ class OrderRepository {
 
   Future<void> updateStatus({required String id, required String value}) async {
     await collection.doc(id).update({'status' : value});
+  }
+  Future<void> copyStatus({required String id, required String value}) async {
+    await collection.doc(id).get().then((value) => FirebaseFirestore.instance.collection('oders').add(
+      {
+        "uId": "9knRcrhpI0I0Ig4XDJ1n",
+        "name": "Đoàn Huy Đức",
+        "phone": '0983848492',
+        "email": 'duc@gmail.com',
+        "address": 'Hanoi',
+        "status": "Progress",
+        "amount": 96000,
+        "orderDate": Timestamp.fromDate(DateTime.now()),
+        "item": [],
+      }));
   }
 
   Future<int> countCollecion() async {

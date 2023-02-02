@@ -1,4 +1,6 @@
+import 'package:client/core/di.dart';
 import 'package:client/data/repositories/authentiation_repository.dart';
+import 'package:client/presentation/views/login/forgot_password.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -9,6 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/responsive.dart';
 import '../../core/theme.dart';
+import '../providers/side_bar_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -34,9 +37,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   late bool isChecked = false;
 
+  var provider = sl<SideBarProvider>();
   @override
   void initState() {
     super.initState();
+    provider.currentIndex = 0;
     _obscureText = true;
     _emailCheck = true;
     _passwordCheck = true;
@@ -125,6 +130,25 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         child: Text(
                           tr('screens.login.signup'),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: CustomTheme.mainTheme.primaryColor),
+                        ))
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Don't remember password?"),
+                    TextButton(
+                        onPressed: () async {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ForgotPassword()),
+                          );
+                        },
+                        child: Text(
+                          "Forgot Password",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: CustomTheme.mainTheme.primaryColor),
@@ -243,7 +267,6 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
       onPressed: () async {
-
         final prefs = await SharedPreferences.getInstance();
         print('Validating before login');
         var emailValid = _emailEditingController.text.isNotEmpty;
@@ -257,7 +280,7 @@ class _LoginScreenState extends State<LoginScreen> {
           try {
             await AuthenticationRepository().signInWithEmailAndPassword(
                 email: _emailEditingController.text, password: _passwordEditingController.text);
-            if(isChecked = true){
+            if(isChecked == true){
               await prefs.setString('username', _emailEditingController.text);
               await prefs.setString('password', _passwordEditingController.text);
             }

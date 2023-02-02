@@ -12,11 +12,6 @@ class AuthenticationRepository {
 
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
-  Future<void> sendPasswordResetEmail({
-    required String email,
-  }) async {
-    await _firebaseAuth.sendPasswordResetEmail(email: email);
-  }
 
   Future<void> signInWithEmailAndPassword({
     required String email,
@@ -24,12 +19,35 @@ class AuthenticationRepository {
   }) async {
 
     EasyLoading.show(status: 'loading...', maskType: EasyLoadingMaskType.black);
-    await _firebaseAuth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+
+    try {
+      await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      print(currentUser?.providerData);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        EasyLoading.showError('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        EasyLoading.showError('Wrong password provided for that user.');
+      }
+    }
     EasyLoading.dismiss();
   }
+
+  Future<void> resetPassword({required String email,}) async {
+    EasyLoading.show(status: 'loading...', maskType: EasyLoadingMaskType.black);
+
+    try{
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      EasyLoading.showSuccess("email sent");
+    } on FirebaseException catch (e){
+      print(e);
+      EasyLoading.showError("${e.message}");
+    }
+    EasyLoading.dismiss();
+}
 
   Future<void> createUserWithEmailAndPassword({
     required String email,

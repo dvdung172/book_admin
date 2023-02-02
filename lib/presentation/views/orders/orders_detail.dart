@@ -256,7 +256,10 @@ class MyStatelessWidget extends StatelessWidget {
               for (var item in snapshot.data!)
                 DataRow(
                   cells: <DataCell>[
-                    DataCell(Text('${item['product'].name}')),
+                    DataCell(ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 300),
+                        child: Text('${item['product'].name}',maxLines: 4,
+                          overflow: TextOverflow.ellipsis,))),
                     DataCell(Container(
                       padding: const EdgeInsets.all(5),
                       constraints: const BoxConstraints(
@@ -272,7 +275,7 @@ class MyStatelessWidget extends StatelessWidget {
                     )),
                     DataCell(Text('${item['quantity']}')),
                     DataCell(
-                        Text('${item['product'].price * item['quantity']}')),
+                        Text('${NumberFormat('###,###').format(item['product'].price * item['quantity'])}')),
                   ],
                 ),
             ],

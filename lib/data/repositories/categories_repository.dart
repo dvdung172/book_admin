@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:universal_io/io.dart';
 
 class CategoryRepository {
   final CollectionReference collection =
@@ -74,7 +75,8 @@ class CategoryRepository {
           //upload
           Reference referenceImageToUpload = referenceDirImage.child(uniqueName);
           try {
-            await referenceImageToUpload.putData(image!,SettableMetadata(contentType: 'image/png'),)
+            File createFileFromBytes = File.fromRawPath(image!);
+            await referenceImageToUpload.putFile(createFileFromBytes,SettableMetadata(contentType: 'image/png'),)
                 .whenComplete(() async {
               final _fileURL = await referenceImageToUpload.getDownloadURL();
               await collection.doc(category.id!).update({'image': _fileURL });

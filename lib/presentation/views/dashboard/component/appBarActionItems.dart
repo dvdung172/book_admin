@@ -33,7 +33,7 @@ class AppBarActionItems extends StatelessWidget {
           PopupMenuButton(
               icon: Icon(Icons.arrow_drop_down_outlined, color: CustomColor.black),
               itemBuilder: (context)=> [
-            PopupMenuItem(child: Text('Setting')),
+            PopupMenuItem(child: Text('Profile')),
             PopupMenuItem(
                 onTap: () async {
                   await AuthenticationRepository().signOut();

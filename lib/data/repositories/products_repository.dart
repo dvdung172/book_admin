@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:universal_io/io.dart';
 
 class ProductRepository {
   final CollectionReference collection =
@@ -85,7 +86,8 @@ class ProductRepository {
         } else {
           Reference referenceImageToUpload = FirebaseStorage.instance.refFromURL(product.image!);
           try {
-            await referenceImageToUpload.putData(image!,SettableMetadata(contentType: 'image/png'),)
+            File createFileFromBytes = File.fromRawPath(image!);
+            await referenceImageToUpload.putFile(createFileFromBytes,SettableMetadata(contentType: 'image/png'),)
                 .whenComplete(() async {
               final _fileURL = await referenceImageToUpload
                   .getDownloadURL();

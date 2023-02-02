@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:universal_io/io.dart';
 
 class PublisherRepository {
   final CollectionReference collection =
@@ -74,7 +75,8 @@ class PublisherRepository {
           //upload
           Reference referenceImageToUpload = referenceDirImage.child(uniqueName);
           try {
-            await referenceImageToUpload.putData(image!,SettableMetadata(contentType: 'image/png'),)
+            File createFileFromBytes = File.fromRawPath(image!);
+            await referenceImageToUpload.putFile(createFileFromBytes,SettableMetadata(contentType: 'image/png'),)
                 .whenComplete(() async {
               final _fileURL = await referenceImageToUpload.getDownloadURL();
               await collection.doc(publisher.id!).update({'image': _fileURL });
